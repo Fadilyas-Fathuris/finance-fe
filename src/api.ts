@@ -1,6 +1,6 @@
   import type { Transaction, Subscriber, Project, Opex, Employee, Budget, Invoice, ProfitShareScheme, Quotation, User, InvestorDisbursement, VenuePartner } from './Types';
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const url = `${BASE_URL}${path}`;
