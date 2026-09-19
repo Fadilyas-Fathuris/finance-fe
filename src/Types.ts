@@ -97,7 +97,6 @@ export type Invoice = {
   date: string;
   due: string;
   items: InvoiceItem[];
-  status: 'paid' | 'unpaid' | 'partial';
   notes: string;
   businessLine?: string;
   receiptImage?: string;

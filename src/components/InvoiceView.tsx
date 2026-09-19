@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FileText, Plus, Trash2, Printer, Save, User, MapPin, Calendar, CreditCard, Landmark, Info } from 'lucide-react';
 import type { Invoice, InvoiceItem } from '../Types';
-import { cn, FormGroup } from './Common';
+import { FormGroup } from './Common';
 import { useAuth } from '../context/AuthContext';
 import { generateDocNumber } from '../utils/docNumbering';
 
@@ -21,7 +21,7 @@ const businessLineLabels: Record<string, string> = {
 const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatCurrency }) => {
   const { user, activeWorkspace } = useAuth();
   const isCLevel = user?.role === 'CEO' || user?.role === 'CFO';
-  const historyColSpan = (activeWorkspace === 'global' ? 6 : 5) + (isCLevel ? 1 : 0);
+  const historyColSpan = (activeWorkspace === 'global' ? 5 : 4) + (isCLevel ? 1 : 0);
   const [formData, setFormData] = useState<Omit<Invoice, 'id'>>({
     num: generateDocNumber('INV', invoices.length + 1),
     client: '', 
@@ -29,7 +29,6 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
     date: new Date().toISOString().split('T')[0],
     due: '', 
     items: [{ desc: '', qty: 1, price: 0 }], 
-    status: 'unpaid', 
     notes: '',
     businessLine: activeWorkspace === 'global' ? 'niskala' : activeWorkspace,
   });
@@ -68,7 +67,6 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
       date: new Date().toISOString().split('T')[0],
       due: '', 
       items: [{ desc: '', qty: 1, price: 0 }], 
-      status: 'unpaid', 
       notes: '',
       businessLine: activeWorkspace === 'global' ? 'niskala' : activeWorkspace,
     });
@@ -87,7 +85,7 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
   };
 
   const formatDateLabel = (dateStr: string) => {
-    if (!dateStr) return '—';
+    if (!dateStr) return '-';
     try {
       const d = new Date(dateStr);
       return d.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -98,28 +96,53 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
 
   return (
     <div className="space-y-8 lg:space-y-12 animate-fade-in-up">
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-8 items-start">
-        {/* Invoice Form */}
-        <div className="xl:col-span-12 app-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 lg:p-8 rounded-2xl shadow-sm">
-          <div className="flex items-center gap-3 lg:gap-4 pb-4 mb-6 lg:mb-8 border-b border-slate-100 dark:border-slate-800">
-            <div className="w-10 h-10 lg:w-12 lg:h-12 bg-[#4682B4]/10 text-[#4682B4] dark:text-sky-400 border border-[#4682B4]/20 flex items-center justify-center rounded-xl shrink-0">
-              <FileText size={22} />
+      {/* Top Banner */}
+      <div className="bg-[#4682B4] text-white p-6 sm:p-8 rounded-3xl relative overflow-hidden shadow-lg border border-[#4682B4]">
+        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase mb-3 text-sky-100 border border-white/10">
+              <FileText size={12} /> Commercial Ledger System
             </div>
-            <div>
-              <h2 className="text-base lg:text-lg font-bold text-slate-900 dark:text-slate-100">Invoice Generator</h2>
-              <p className="text-xs text-slate-400 mt-0.5">Sistem Pembuatan & Penerbitan Faktur Tagihan</p>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight">Invoice Generator</h1>
+            <p className="text-sky-100 text-xs sm:text-sm mt-1 max-w-xl">
+              Penerbitan faktur tagihan profesional untuk klien internal & eksternal Niskala Group.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+             <div className="text-right hidden sm:block">
+                <div className="text-[10px] font-bold text-sky-200 uppercase tracking-wider">Unit Bisnis</div>
+                <div className="text-xs font-black text-white">{businessLineLabel}</div>
+             </div>
+          </div>
+        </div>
+        <div className="absolute -right-8 -bottom-8 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none" />
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-8 items-start">
+        {/* Form Container */}
+        <div className="xl:col-span-12 app-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 lg:p-8 shadow-xs">
+          <div className="flex items-center justify-between pb-6 border-b border-slate-100 dark:border-slate-800 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-[#4682B4]/10 text-[#4682B4] dark:text-sky-400 border border-[#4682B4]/20 flex items-center justify-center rounded-xl">
+                <FileText size={20} />
+              </div>
+              <div>
+                <h2 className="text-base lg:text-lg font-bold text-slate-900 dark:text-slate-100">Detail Invoice</h2>
+                <p className="text-xs text-slate-400 mt-0.5">Lengkapi formulir untuk menyusun draf invoice</p>
+              </div>
             </div>
           </div>
 
-          <div className="space-y-6 lg:space-y-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="space-y-6">
+            {/* Meta Group */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               <FormGroup label="Nomor Invoice">
                 <div className="relative">
                   <CreditCard className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                  <input type="text" value={formData.num} onChange={e => setFormData({...formData, num: e.target.value})} className="neo-input pl-10" />
+                  <input type="text" value={formData.num} onChange={e => setFormData({...formData, num: e.target.value})} className="neo-input font-mono font-bold pl-10" placeholder="INV-2026-001" />
                 </div>
               </FormGroup>
-              <FormGroup label="Tanggal Terbit">
+              <FormGroup label="Tanggal Invoice">
                 <div className="relative">
                   <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                   <input type="date" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} className="neo-input pl-10" />
@@ -131,22 +154,14 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                   <input type="date" value={formData.due} onChange={e => setFormData({...formData, due: e.target.value})} className="neo-input pl-10" />
                 </div>
               </FormGroup>
-              <FormGroup label="Nama Klien">
+            </div>
+
+            {/* Client Info */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <FormGroup label="Nama Klien / Perusahaan">
                 <div className="relative">
                   <User className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                   <input type="text" value={formData.client} onChange={e => setFormData({...formData, client: e.target.value})} className="neo-input pl-10" placeholder="PT. Maju Mundur" />
-                </div>
-              </FormGroup>
-              <FormGroup label="Status Pembayaran">
-                <div className="relative">
-                   <select 
-                    value={formData.status} 
-                    onChange={e => setFormData({...formData, status: e.target.value as any})} 
-                    className="neo-input cursor-pointer font-medium"
-                  >
-                    <option value="unpaid">BELUM DIBAYAR</option>
-                    <option value="paid">SUDAH DIBAYAR</option>
-                  </select>
                 </div>
               </FormGroup>
               {activeWorkspace === 'global' && (
@@ -248,75 +263,96 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                     body { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 0; background: white !important; color: black !important; }
                     * { box-sizing: border-box; }
                     table { border-collapse: collapse !important; width: 100% !important; }
-                    .status-paid { color: #047857 !important; border-color: #a7f3d0 !important; background: #ecfdf5 !important; }
-                    .status-unpaid { color: #be123c !important; border-color: #fecdd3 !important; background: #fff1f2 !important; }
+                    .no-break { page-break-inside: avoid; }
                   }
                 `}</style>
 
-                <div className="flex items-center justify-between border-b-2 border-slate-800 pb-4 mb-5">
-                  <div className="flex items-center gap-3.5">
-                    <img src="/logo.png" alt="Niskala Logo" className="h-12 w-auto object-contain shrink-0" />
-                    <div>
-                      <h1 className="text-xl font-extrabold tracking-tight text-slate-900">NISKALA TECH ID</h1>
-                      <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold">Digital Solutions & Finance Administration</p>
+                {/* Header Document */}
+                <div className="flex justify-between items-start pb-6 border-b-2 border-slate-800 mb-8">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                       <div className="w-6 h-6 bg-[#4682B4] text-white flex items-center justify-center font-black text-xs rounded-sm">N</div>
+                       <span className="font-black tracking-wider text-base uppercase text-slate-900">NISKALA GROUP</span>
                     </div>
+                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">{businessLineLabel}</p>
+                    <p className="text-[9px] text-slate-500 mt-1 max-w-xs leading-relaxed">
+                      Jl. Prof. Sudarto No. 13, Tembalang, Kota Semarang, Jawa Tengah 50275<br/>
+                      Email: finance@niskala.id | Web: niskala.id
+                    </p>
                   </div>
                   <div className="text-right">
-                    <div className="text-xs font-bold uppercase tracking-wider text-slate-400">NOMOR INVOICE</div>
-                    <div className="text-sm font-mono font-bold text-[#4682B4]">{formData.num}</div>
-                    <div className="text-xs text-slate-500 mt-0.5">Tanggal Terbit: {formatDateLabel(formData.date)}</div>
+                    <h1 className="text-2xl font-black tracking-tight text-[#4682B4]">INVOICE</h1>
+                    <table className="text-[10px] mt-2 font-mono ml-auto">
+                      <tbody>
+                        <tr>
+                          <td className="text-slate-500 pr-2 py-0.5 font-bold uppercase">NO. INVOICE:</td>
+                          <td className="font-black text-slate-900">{formData.num}</td>
+                        </tr>
+                        <tr>
+                          <td className="text-slate-500 pr-2 py-0.5 font-bold uppercase">TANGGAL:</td>
+                          <td className="font-bold">{formatDateLabel(formData.date)}</td>
+                        </tr>
+                        <tr>
+                          <td className="text-slate-500 pr-2 py-0.5 font-bold uppercase">JATUH TEMPO:</td>
+                          <td className="font-bold text-rose-600">{formatDateLabel(formData.due)}</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
 
-                <div className="text-center py-2 mb-3">
-                  <h2 className="text-lg font-bold uppercase tracking-wide text-slate-900">INVOICE / TAGIHAN PEMBAYARAN</h2>
-                  <p className="text-xs text-slate-500 font-mono mt-1">Jatuh Tempo: {formatDateLabel(formData.due)}</p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 rounded-xl text-xs mb-6">
+                {/* Bill To */}
+                <div className="grid grid-cols-2 gap-8 mb-8">
                   <div>
-                    <span className="text-slate-400 font-semibold block uppercase tracking-wider text-[10px]">Diterbitkan Oleh:</span>
-                    <div className="font-bold text-slate-900 mt-0.5">PT. NISKALA TECH ID</div>
-                    <div className="text-slate-500">{businessLineLabel}</div>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-[#4682B4] mb-2">TAGIHAN KEPADA / BILL TO:</p>
+                    <p className="text-sm font-black uppercase text-slate-900">{formData.client || '(Nama Klien / Perusahaan)'}</p>
+                    <p className="text-[10px] text-slate-600 mt-1 leading-relaxed whitespace-pre-line">
+                      {formData.clientAddr || '(Alamat Lengkap Perusahaan / Klien)'}
+                    </p>
                   </div>
-                  <div>
-                    <span className="text-slate-400 font-semibold block uppercase tracking-wider text-[10px]">Tagihan Kepada:</span>
-                    <div className="font-bold text-slate-900 mt-0.5">{formData.client || '[Nama Klien]'}</div>
-                    <div className="text-slate-500 leading-relaxed">{formData.clientAddr || '[Alamat Klien]'}</div>
+                  <div className="bg-slate-50 p-4 border border-slate-200 rounded-lg flex flex-col justify-center">
+                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Status Dokumen</span>
+                    <span className="font-black text-xs uppercase text-slate-800">FAKTUR TAGIHAN RESMI</span>
+                    <span className="text-[9px] text-slate-500 mt-0.5">Harap melakukan pembayaran sebelum tanggal jatuh tempo.</span>
                   </div>
                 </div>
 
-                {/* Items table */}
-                <table className="w-full mb-6 text-xs border-collapse overflow-hidden rounded-xl">
+                {/* Table Items */}
+                <table className="w-full mb-8 border border-slate-300">
                   <thead>
-                    <tr className="bg-slate-800 text-white uppercase text-[9px] tracking-wider">
-                      <th className="p-3 text-left w-12">No</th>
-                      <th className="p-3 text-left">Deskripsi Layanan / Produk</th>
-                      <th className="p-3 text-center w-16">Qty</th>
-                      <th className="p-3 text-right w-32">Harga Satuan</th>
-                      <th className="p-3 text-right w-36">Total</th>
+                    <tr className="bg-slate-800 text-white text-[9px] font-bold tracking-wider uppercase">
+                      <th className="py-2.5 px-3 text-center w-10 border border-slate-700">NO</th>
+                      <th className="py-2.5 px-3 text-left border border-slate-700">DESKRIPSI LAYANAN / PRODUK</th>
+                      <th className="py-2.5 px-3 text-center w-16 border border-slate-700">QTY</th>
+                      <th className="py-2.5 px-3 text-right w-28 border border-slate-700">HARGA SATUAN</th>
+                      <th className="py-2.5 px-3 text-right w-28 border border-slate-700">TOTAL</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    {formData.items.map((item, i) => (
-                      <tr key={i} className="border-b border-slate-200 even:bg-slate-50">
-                        <td className="p-3 text-center font-mono font-bold">{i + 1}</td>
-                        <td className="p-3 font-semibold">{item.desc || '-'}</td>
-                        <td className="p-3 text-center font-mono font-bold">{item.qty}</td>
-                        <td className="p-3 text-right font-mono">{formatCurrency(item.price)}</td>
-                        <td className="p-3 text-right font-mono font-bold">{formatCurrency(item.qty * item.price)}</td>
+                  <tbody className="divide-y divide-slate-200">
+                    {formData.items.map((it, idx) => (
+                      <tr key={idx} className="even:bg-slate-50/50">
+                        <td className="py-2.5 px-3 text-center font-mono text-[10px] text-slate-500 border-x border-slate-200">{idx + 1}</td>
+                        <td className="py-2.5 px-3 font-semibold text-slate-900 border-x border-slate-200">{it.desc || '-'}</td>
+                        <td className="py-2.5 px-3 text-center font-mono font-bold border-x border-slate-200">{it.qty}</td>
+                        <td className="py-2.5 px-3 text-right font-mono border-x border-slate-200">{formatCurrency(it.price)}</td>
+                        <td className="py-2.5 px-3 text-right font-mono font-bold border-x border-slate-200">{formatCurrency(it.qty * it.price)}</td>
                       </tr>
                     ))}
+                    {formData.items.length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="py-6 text-center text-slate-400 italic">Belum ada item tagihan yang ditambahkan</td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
 
-                {/* Summary & Bank Info */}
-                <div className="grid grid-cols-12 gap-8 mb-10">
+                {/* Bottom Section */}
+                <div className="grid grid-cols-12 gap-8 mb-12">
                   <div className="col-span-7 space-y-4">
-                    <div className="border border-slate-200 p-4 bg-slate-50 rounded-xl">
-                      <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2 flex items-center gap-1.5">
-                        <Landmark size={12} /> Rekening Pembayaran
-                      </h4>
+                    <div className="bg-slate-50 p-4 border border-slate-200 rounded-lg">
+                      <p className="text-[9px] font-black uppercase tracking-wider text-slate-800 mb-2 flex items-center gap-1.5">
+                        <Landmark size={12} className="text-[#4682B4]" /> METODE PEMBAYARAN:
+                      </p>
                       <div className="text-[10px] space-y-1 font-mono">
                         <div><span className="text-slate-500">BANK:</span> <strong>BANK MANDIRI</strong></div>
                         <div><span className="text-slate-500">NO. REK:</span> <strong className="text-sm">1370024220468</strong></div>
@@ -343,14 +379,6 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                       <span className="uppercase text-[10px] tracking-wider">Total Tagihan:</span>
                       <span className="font-mono text-base">{formatCurrency(total)}</span>
                     </div>
-                    <div className="pt-2">
-                      <span className={cn(
-                        "inline-block border px-4 py-1.5 text-xs font-black uppercase tracking-widest rounded-full",
-                        formData.status === 'paid' ? 'status-paid border-emerald-600 text-emerald-600 bg-emerald-50' : 'status-unpaid border-rose-600 text-rose-600 bg-rose-50'
-                      )}>
-                        STATUS: {formData.status === 'paid' ? 'LUNAS / PAID' : 'BELUM DIBAYAR'}
-                      </span>
-                    </div>
                   </div>
                 </div>
 
@@ -369,7 +397,7 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                 </div>
 
                 <div className="absolute bottom-4 left-0 right-0 text-center text-[7px] font-bold text-gray-300 uppercase tracking-[0.2em]">
-                  Document Generated by Niskala Finance OS • Precision Ledger System v1.0
+                  Document Generated by Niskala Finance OS â€¢ Precision Ledger System v1.0
                 </div>
               </div>
             </div>
@@ -399,7 +427,6 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                 {activeWorkspace === 'global' && <th className="text-center">Lini Bisnis</th>}
                 <th>Tanggal</th>
                 {isCLevel && <th className="text-center">Audit</th>}
-                <th className="text-center">Status</th>
                 <th className="text-right">Total</th>
               </tr>
             </thead>
@@ -429,14 +456,6 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                         )}
                       </td>
                     )}
-                    <td className="text-center">
-                      <span className={cn(
-                        "neo-badge text-[10px] px-2.5 py-1 font-bold rounded-md whitespace-nowrap",
-                        inv.status === 'paid' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800' : 'bg-rose-50 text-rose-600 dark:bg-rose-950/50 dark:text-rose-400 border border-rose-200 dark:border-rose-800'
-                      )}>
-                        {inv.status.toUpperCase()}
-                      </span>
-                    </td>
                     <td className="text-right font-mono font-bold text-xs sm:text-sm text-slate-900 dark:text-slate-100 tabular-nums whitespace-nowrap">
                       {formatCurrency(inv.items.reduce((a, b) => a + (b.qty * b.price), 0))}
                     </td>
