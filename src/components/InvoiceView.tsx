@@ -30,6 +30,9 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
     due: '', 
     items: [{ desc: '', qty: 1, price: 0 }], 
     notes: '',
+    bankName: 'BANK MANDIRI',
+    bankAccount: '1370024220468',
+    bankHolder: 'FARIS DWI RAMADHAN',
     businessLine: activeWorkspace === 'global' ? 'niskala' : activeWorkspace,
   });
 
@@ -68,6 +71,9 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
       due: '', 
       items: [{ desc: '', qty: 1, price: 0 }], 
       notes: '',
+      bankName: formData.bankName || 'BANK MANDIRI',
+      bankAccount: formData.bankAccount || '1370024220468',
+      bankHolder: formData.bankHolder || 'FARIS DWI RAMADHAN',
       businessLine: activeWorkspace === 'global' ? 'niskala' : activeWorkspace,
     });
   };
@@ -191,6 +197,52 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                 <textarea value={formData.clientAddr} onChange={e => setFormData({...formData, clientAddr: e.target.value})} className="neo-input h-20 pl-10 pt-3" placeholder="Jl. Sudirman No. 123, Jakarta" />
               </div>
             </FormGroup>
+
+            {/* Rekening Tujuan Pembayaran (Manual Input) */}
+            <div className="space-y-3 bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 rounded-xl p-4 lg:p-6">
+              <div className="flex items-center gap-2 pb-2 border-b border-slate-200 dark:border-slate-700">
+                <Landmark size={16} className="text-[#4682B4]" />
+                <h3 className="font-bold text-xs uppercase tracking-wider text-slate-700 dark:text-slate-300">Rekening Tujuan Pembayaran</h3>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+                <FormGroup label="Nama Bank">
+                  <div className="relative">
+                    <Landmark className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                    <input 
+                      type="text" 
+                      value={formData.bankName} 
+                      onChange={e => setFormData({...formData, bankName: e.target.value})} 
+                      className="neo-input pl-10 uppercase font-semibold" 
+                      placeholder="BANK MANDIRI" 
+                    />
+                  </div>
+                </FormGroup>
+                <FormGroup label="Nomor Rekening">
+                  <div className="relative">
+                    <CreditCard className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                    <input 
+                      type="text" 
+                      value={formData.bankAccount} 
+                      onChange={e => setFormData({...formData, bankAccount: e.target.value})} 
+                      className="neo-input pl-10 font-mono font-bold" 
+                      placeholder="1370024220468" 
+                    />
+                  </div>
+                </FormGroup>
+                <FormGroup label="Atas Nama (A.N)">
+                  <div className="relative">
+                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                    <input 
+                      type="text" 
+                      value={formData.bankHolder} 
+                      onChange={e => setFormData({...formData, bankHolder: e.target.value})} 
+                      className="neo-input pl-10 uppercase font-semibold" 
+                      placeholder="FARIS DWI RAMADHAN" 
+                    />
+                  </div>
+                </FormGroup>
+              </div>
+            </div>
 
             {/* Items */}
             <div className="space-y-4 bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 rounded-xl p-4 lg:p-6">
@@ -354,9 +406,9 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                         <Landmark size={12} className="text-[#4682B4]" /> METODE PEMBAYARAN:
                       </p>
                       <div className="text-[10px] space-y-1 font-mono">
-                        <div><span className="text-slate-500">BANK:</span> <strong>BANK MANDIRI</strong></div>
-                        <div><span className="text-slate-500">NO. REK:</span> <strong className="text-sm">1370024220468</strong></div>
-                        <div><span className="text-slate-500">A.N:</span> <strong>FARIS DWI RAMADHAN</strong></div>
+                        <div><span className="text-slate-500">BANK:</span> <strong>{formData.bankName || 'BANK MANDIRI'}</strong></div>
+                        <div><span className="text-slate-500">NO. REK:</span> <strong className="text-sm">{formData.bankAccount || '1370024220468'}</strong></div>
+                        <div><span className="text-slate-500">A.N:</span> <strong>{formData.bankHolder || 'FARIS DWI RAMADHAN'}</strong></div>
                       </div>
                     </div>
                     {formData.notes && (
@@ -397,7 +449,7 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                 </div>
 
                 <div className="absolute bottom-4 left-0 right-0 text-center text-[7px] font-bold text-gray-300 uppercase tracking-[0.2em]">
-                  Document Generated by Niskala Finance OS â€¢ Precision Ledger System v1.0
+                  Document Generated by Niskala Finance OS • Precision Ledger System v1.0
                 </div>
               </div>
             </div>

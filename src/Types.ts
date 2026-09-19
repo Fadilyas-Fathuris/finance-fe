@@ -98,6 +98,9 @@ export type Invoice = {
   due: string;
   items: InvoiceItem[];
   notes: string;
+  bankName?: string;
+  bankAccount?: string;
+  bankHolder?: string;
   businessLine?: string;
   receiptImage?: string;
   createdById?: string;
