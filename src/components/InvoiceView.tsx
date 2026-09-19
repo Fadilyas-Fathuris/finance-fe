@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, Plus, Trash2, Printer, Save, User, MapPin, Calendar, CreditCard, Landmark, Info } from 'lucide-react';
+import { FileText, Plus, Trash2, Printer, Save, User, MapPin, Calendar, CreditCard, Landmark, Info, Eye } from 'lucide-react';
 import type { Invoice, InvoiceItem } from '../Types';
 import { FormGroup } from './Common';
 import { useAuth } from '../context/AuthContext';
@@ -21,7 +21,7 @@ const businessLineLabels: Record<string, string> = {
 const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatCurrency }) => {
   const { user, activeWorkspace } = useAuth();
   const isCLevel = user?.role === 'CEO' || user?.role === 'CFO';
-  const historyColSpan = (activeWorkspace === 'global' ? 5 : 4) + (isCLevel ? 1 : 0);
+  const historyColSpan = (activeWorkspace === 'global' ? 6 : 5) + (isCLevel ? 1 : 0);
   const [formData, setFormData] = useState<Omit<Invoice, 'id'>>({
     num: generateDocNumber('INV', invoices.length + 1),
     client: '', 
@@ -87,6 +87,31 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
       window.print();
       document.body.innerHTML = originalContents;
       window.location.reload(); 
+    }
+  };
+
+  const handleLoadInvoice = (inv: Invoice, autoPrint = false) => {
+    setFormData({
+      num: inv.num,
+      client: inv.client,
+      clientAddr: inv.clientAddr || '',
+      date: inv.date ? (inv.date.includes('T') ? inv.date.split('T')[0] : inv.date) : '',
+      due: inv.due ? (inv.due.includes('T') ? inv.due.split('T')[0] : inv.due) : '',
+      items: inv.items && inv.items.length > 0 ? inv.items.map(it => ({ desc: it.desc, qty: it.qty, price: it.price })) : [{ desc: '', qty: 1, price: 0 }],
+      notes: inv.notes || '',
+      bankName: inv.bankName || 'BANK MANDIRI',
+      bankAccount: inv.bankAccount || '1370024220468',
+      bankHolder: inv.bankHolder || 'FARIS DWI RAMADHAN',
+      businessLine: inv.businessLine || activeWorkspace,
+    });
+
+    if (autoPrint) {
+      setTimeout(() => {
+        handlePrint();
+      }, 150);
+    } else {
+      const element = document.getElementById('invoice-print-area');
+      element?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -480,6 +505,7 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                 <th>Tanggal</th>
                 {isCLevel && <th className="text-center">Audit</th>}
                 <th className="text-right">Total</th>
+                <th className="text-center w-40">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -510,6 +536,26 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                     )}
                     <td className="text-right font-mono font-bold text-xs sm:text-sm text-slate-900 dark:text-slate-100 tabular-nums whitespace-nowrap">
                       {formatCurrency(inv.items.reduce((a, b) => a + (b.qty * b.price), 0))}
+                    </td>
+                    <td className="text-center whitespace-nowrap">
+                      <div className="flex items-center justify-center gap-1.5">
+                        <button
+                          onClick={() => handleLoadInvoice(inv, false)}
+                          title="Tampilkan data invoice ini di Live Preview / Form"
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold transition-all cursor-pointer"
+                        >
+                          <Eye size={13} />
+                          <span className="hidden sm:inline">Lihat</span>
+                        </button>
+                        <button
+                          onClick={() => handleLoadInvoice(inv, true)}
+                          title="Cetak Ulang Dokumen Invoice Ini"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#4682B4] hover:bg-[#386b94] text-white rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer"
+                        >
+                          <Printer size={13} />
+                          <span>Cetak</span>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
