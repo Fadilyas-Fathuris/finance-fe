@@ -136,7 +136,7 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
             </div>
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight">Invoice Generator</h1>
             <p className="text-sky-100 text-xs sm:text-sm mt-1 max-w-xl">
-              Penerbitan faktur tagihan profesional untuk klien internal & eksternal Niskala Group.
+              Penerbitan faktur tagihan profesional untuk klien internal & eksternal PT. NISKALA ID TECH.
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -170,10 +170,10 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
               <FormGroup label="Nomor Invoice">
                 <div className="relative">
                   <CreditCard className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                  <input type="text" value={formData.num} onChange={e => setFormData({...formData, num: e.target.value})} className="neo-input font-mono font-bold pl-10" placeholder="INV-2026-001" />
+                  <input type="text" value={formData.num} onChange={e => setFormData({...formData, num: e.target.value})} className="neo-input font-mono font-bold pl-10" placeholder="001/INV/NISKALA/IX/2026" />
                 </div>
               </FormGroup>
-              <FormGroup label="Tanggal Invoice">
+              <FormGroup label="Tanggal Terbit">
                 <div className="relative">
                   <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                   <input type="date" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} className="neo-input pl-10" />
@@ -347,15 +347,23 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                 {/* Header Document */}
                 <div className="flex justify-between items-start pb-6 border-b-2 border-slate-800 mb-8">
                   <div>
-                    <div className="flex items-center gap-2 mb-2">
-                       <div className="w-6 h-6 bg-[#4682B4] text-white flex items-center justify-center font-black text-xs rounded-sm">N</div>
-                       <span className="font-black tracking-wider text-base uppercase text-slate-900">NISKALA GROUP</span>
+                    <div className="flex items-center gap-3 mb-2">
+                       <img 
+                         src="/logo.png" 
+                         alt="Niskala Logo" 
+                         className="h-12 w-auto object-contain" 
+                         onError={(e) => { e.currentTarget.style.display = 'none'; }} 
+                       />
+                       <div>
+                         <span className="font-black tracking-wider text-base uppercase text-slate-900 block">PT. NISKALA ID TECH</span>
+                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">{businessLineLabel}</p>
+                       </div>
                     </div>
-                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">{businessLineLabel}</p>
-                    <p className="text-[9px] text-slate-500 mt-1 max-w-xs leading-relaxed">
-                      Jl. Prof. Sudarto No. 13, Tembalang, Kota Semarang, Jawa Tengah 50275<br/>
-                      Email: finance@niskala.id | Web: niskala.id
-                    </p>
+                    <div className="text-[9px] text-slate-600 mt-2 max-w-md leading-relaxed">
+                      <div><strong>Alamat:</strong> Bandung, Jawa Barat</div>
+                      <div><strong>Email:</strong> niskalaidtech@gmail.com</div>
+                      <div><strong>Website:</strong> <a href="https://niskalatech.id" target="_blank" rel="noreferrer" className="text-[#4682B4] font-medium underline">https://niskalatech.id</a> | <a href="https://aksalab.niskalatech.id/" target="_blank" rel="noreferrer" className="text-[#4682B4] font-medium underline">https://aksalab.niskalatech.id/</a></div>
+                    </div>
                   </div>
                   <div className="text-right">
                     <h1 className="text-2xl font-black tracking-tight text-[#4682B4]">INVOICE</h1>
@@ -378,7 +386,7 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                   </div>
                 </div>
 
-                {/* Bill To */}
+                {/* Bill To & Issuer */}
                 <div className="grid grid-cols-2 gap-8 mb-8">
                   <div>
                     <p className="text-[9px] font-black uppercase tracking-widest text-[#4682B4] mb-2">TAGIHAN KEPADA / BILL TO:</p>
@@ -388,9 +396,10 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                     </p>
                   </div>
                   <div className="bg-slate-50 p-4 border border-slate-200 rounded-lg flex flex-col justify-center">
-                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Status Dokumen</span>
-                    <span className="font-black text-xs uppercase text-slate-800">FAKTUR TAGIHAN RESMI</span>
-                    <span className="text-[9px] text-slate-500 mt-0.5">Harap melakukan pembayaran sebelum tanggal jatuh tempo.</span>
+                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Diterbitkan Oleh</span>
+                    <span className="font-black text-xs uppercase text-slate-800">PT. NISKALA ID TECH</span>
+                    <span className="text-[10px] text-slate-600 font-semibold">{businessLineLabel} • Bandung, Jawa Barat</span>
+                    <span className="text-[9px] text-slate-500 mt-1">Harap melakukan pembayaran sebelum tanggal jatuh tempo.</span>
                   </div>
                 </div>
 
@@ -464,7 +473,7 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                   <div className="w-64">
                     <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-12">Disetujui oleh,</p>
                     <p className="font-black text-xs uppercase border-t border-slate-800 pt-2">FARIS DWI RAMADHAN</p>
-                    <p className="text-[9px] text-slate-500 font-bold">CEO NISKALA</p>
+                    <p className="text-[9px] text-slate-500 font-bold">CEO PT. NISKALA ID TECH</p>
                   </div>
                   <div className="hidden">
                     <p className="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-12">PENERIMA / KLIEN,</p>
