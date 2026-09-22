@@ -9,6 +9,7 @@ import type { ProfitShareScheme, SukukProject, SukukInvestor, SukukSettlementRec
 import { cn, StatCard } from './Common';
 import { api } from '../api';
 import { generateDocNumber } from '../utils/docNumbering';
+import { useAuth } from '../context/AuthContext';
 
 interface ProfitShareViewProps {
   netIncome: number;
@@ -105,6 +106,9 @@ const ProfitShareView: React.FC<ProfitShareViewProps> = ({
   setSchemes,
   formatCurrency 
 }) => {
+  const { user } = useAuth();
+  const canAutoAttachCeoSignature = user?.role === 'CEO';
+
   // Main Module Tab State
   const [activeMainTab, setActiveMainTab] = useState<'sukuk' | 'simulation'>('sukuk');
 
@@ -1474,8 +1478,15 @@ const ProfitShareView: React.FC<ProfitShareViewProps> = ({
                   <div className="w-64 space-y-1">
                     <p className="text-slate-500 font-semibold uppercase tracking-widest text-[9px]">Penerbit & Pengelola Projek,</p>
                     <p className="font-bold text-slate-950 dark:text-slate-100 uppercase tracking-wide">PT. NISKALA TECH ID</p>
-                    <div className="h-16 flex items-center justify-center">
-                      {/* Clean Official Signature Space */}
+                    <div className="h-16 flex items-end justify-center">
+                      {canAutoAttachCeoSignature && (
+                        <img
+                          src="/ceo-signature.png"
+                          alt="Tanda tangan CEO"
+                          className="max-h-16 max-w-[200px] object-contain opacity-95"
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        />
+                      )}
                     </div>
                     <p className="font-bold text-slate-950 dark:text-slate-100 border-t border-slate-800 pt-2 text-sm font-sans">Faris Dwi Ramadhan</p>
                     <p className="text-slate-500 font-semibold text-[11px]">Chief Executive Officer (CEO)</p>

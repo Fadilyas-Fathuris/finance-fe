@@ -21,6 +21,7 @@ const businessLineLabels: Record<string, string> = {
 const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatCurrency }) => {
   const { user, activeWorkspace } = useAuth();
   const isCLevel = user?.role === 'CEO' || user?.role === 'CFO';
+  const canAutoAttachCeoSignature = user?.role === 'CEO';
   const historyColSpan = (activeWorkspace === 'global' ? 6 : 5) + (isCLevel ? 1 : 0);
   const [formData, setFormData] = useState<Omit<Invoice, 'id'>>({
     num: generateDocNumber('INV', invoices.length + 1),
@@ -471,7 +472,17 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ invoices, addInvoice, formatC
                 {/* Signatures */}
                 <div className="flex justify-end text-center no-break">
                   <div className="w-64">
-                    <p className="text-[9px] font-semibold uppercase tracking-widest text-slate-500 mb-14">Disetujui oleh,</p>
+                    <p className="text-[9px] font-semibold uppercase tracking-widest text-slate-500">Disetujui oleh,</p>
+                    <div className="h-14 flex items-end justify-center">
+                      {canAutoAttachCeoSignature && (
+                        <img
+                          src="/ceo-signature.png"
+                          alt="Tanda tangan CEO"
+                          className="max-h-14 max-w-[190px] object-contain opacity-95"
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        />
+                      )}
+                    </div>
                     <p className="font-bold text-xs uppercase border-t border-slate-800 pt-2">FARIS DWI RAMADHAN</p>
                     <p className="text-[9px] text-slate-500 font-semibold">CEO PT. NISKALA ID TECH</p>
                   </div>
