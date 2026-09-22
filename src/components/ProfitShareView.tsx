@@ -1312,49 +1312,49 @@ const ProfitShareView: React.FC<ProfitShareViewProps> = ({
               </div>
 
               {/* Printable Document Sheet */}
-              <div id="printable-report-sheet" className="p-6 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 space-y-6">
+              <div id="printable-report-sheet" className="p-8 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 space-y-6">
                 {/* Document Letterhead */}
-                <div className="flex items-center justify-between border-b-2 border-slate-800 dark:border-slate-200 pb-4">
+                <div className="flex items-center justify-between border-b border-slate-900 dark:border-slate-200 pb-5">
                   <div className="flex items-center gap-3.5">
-                    <img src="/logo.png" alt="Niskala Logo" className="h-12 w-auto object-contain shrink-0" />
+                    <img src="/logo.png" alt="Niskala Logo" className="h-10 w-auto object-contain shrink-0" />
                     <div>
-                      <h1 className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
+                      <h1 className="text-lg font-bold tracking-tight text-slate-950 dark:text-slate-100">
                         PT. NISKALA TECH ID
                       </h1>
-                      <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold">Divisi Kemitraan & Investor Relations • Sukuk Investment</p>
+                      <p className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">Divisi Kemitraan & Investor Relations | Sukuk Investment</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-xs font-bold uppercase tracking-wider text-slate-400">NOMOR SURAT RESMI</div>
-                    <div className="text-sm font-mono font-bold text-[#4682B4]">
+                    <div className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Nomor Dokumen</div>
+                    <div className="text-sm font-mono font-bold text-slate-950 dark:text-slate-100">
                       {autoDocNum}
                     </div>
-                    <div className="text-xs text-slate-500 mt-0.5">Tanggal Cetak: {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+                    <div className="text-[10px] text-slate-500 mt-0.5">Tanggal: {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
                   </div>
                 </div>
 
                 {/* Document Title */}
-                <div className="text-center py-2">
-                  <h2 className="text-lg font-bold uppercase tracking-wide text-slate-900 dark:text-slate-100">
+                <div className="text-center py-1">
+                  <h2 className="text-base font-bold uppercase tracking-wide text-slate-950 dark:text-slate-100">
                     {selectedPrintInvestorId === 'all'
                       ? 'LAPORAN KONSOLIDASI HASIL INVESTASI SUKUK PROJEK'
                       : `LAPORAN BAGI HASIL INVESTOR ATAS NAMA ${printSukukSettlement.settlement.investorPayoutBreakdown.find(i => i.investorId === selectedPrintInvestorId)?.investorName.toUpperCase()}`}
                   </h2>
-                  <p className="text-xs text-slate-500 font-mono mt-1 flex items-center justify-center gap-1">
-                    <Clock size={12} /> Periode Transaksi: {formatDateTimeRange(printSukukSettlement.settlement.startDateTime, printSukukSettlement.settlement.endDateTime)}
+                  <p className="text-[10px] text-slate-500 font-mono mt-1">
+                    Periode Transaksi: {formatDateTimeRange(printSukukSettlement.settlement.startDateTime, printSukukSettlement.settlement.endDateTime)}
                   </p>
                 </div>
 
                 {/* Project Overview */}
-                <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl text-xs">
+                <div className="grid grid-cols-2 gap-8 border-y border-slate-300 py-4 text-xs">
                   <div>
-                    <span className="text-slate-400 font-semibold block uppercase tracking-wider text-[10px]">Nama Projek Investasi:</span>
-                    <div className="font-extrabold text-slate-900 dark:text-slate-100 mt-0.5">{printSukukSettlement.project.projectName}</div>
-                    <div className="text-slate-500 font-mono mt-1">Tenor: {printSukukSettlement.project.tenorMonths} Bulan</div>
+                    <span className="text-slate-500 font-semibold block uppercase tracking-widest text-[9px]">Nama Projek Investasi</span>
+                    <div className="font-bold text-slate-950 dark:text-slate-100 mt-1">{printSukukSettlement.project.projectName}</div>
+                    <div className="text-slate-500 font-mono mt-1">Tenor {printSukukSettlement.project.tenorMonths} Bulan</div>
                   </div>
                   <div>
-                    <span className="text-slate-400 font-semibold block uppercase tracking-wider text-[10px]">Total Modal Projek:</span>
-                    <div className="font-extrabold text-slate-900 dark:text-slate-100 font-mono text-sm mt-0.5">{formatCurrency(printSukukSettlement.project.totalRequiredCapital)}</div>
+                    <span className="text-slate-500 font-semibold block uppercase tracking-widest text-[9px]">Total Modal Projek</span>
+                    <div className="font-bold text-slate-950 dark:text-slate-100 font-mono text-sm mt-1">{formatCurrency(printSukukSettlement.project.totalRequiredCapital)}</div>
                     <div className="text-slate-500 font-mono mt-1">
                       Status Skema: {printSukukSettlement.settlement.isBepReached ? 'Post-BEP (20/80)' : 'Pre-BEP (80/20)'}
                     </div>
@@ -1364,9 +1364,9 @@ const ProfitShareView: React.FC<ProfitShareViewProps> = ({
                 {/* Financial Breakdown View */}
                 {selectedPrintInvestorId === 'all' ? (
                   <>
-                    <table className="w-full text-left border-collapse text-xs">
+                    <table className="w-full text-left border-collapse text-xs border-y border-slate-900">
                       <thead>
-                        <tr className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold uppercase tracking-wider border-y border-slate-300 dark:border-slate-700">
+                        <tr className="text-slate-950 dark:text-slate-100 font-bold uppercase tracking-wider border-b border-slate-900 dark:border-slate-200">
                           <th className="py-3 px-4">Deskripsi Laba Operasional Projek</th>
                           <th className="py-3 px-4 text-center">Fase Rate</th>
                           <th className="py-3 px-4 text-right">Alokasi Investor</th>
@@ -1381,10 +1381,10 @@ const ProfitShareView: React.FC<ProfitShareViewProps> = ({
                           <td className="py-3.5 px-4 text-center font-bold text-slate-900 dark:text-slate-100 font-sans">
                             {printSukukSettlement.settlement.appliedInvestorSharePercent}% : {printSukukSettlement.settlement.appliedNiskalaSharePercent}%
                           </td>
-                          <td className="py-3 px-4 text-right font-bold text-amber-600 dark:text-amber-400">
+                          <td className="py-3 px-4 text-right font-bold text-slate-950 dark:text-slate-100">
                             {formatCurrency(printSukukSettlement.settlement.totalInvestorPayout)}
                           </td>
-                          <td className="py-3 px-4 text-right font-bold text-emerald-600 dark:text-emerald-400">
+                          <td className="py-3 px-4 text-right font-bold text-slate-950 dark:text-slate-100">
                             {formatCurrency(printSukukSettlement.settlement.totalNiskalaNet)}
                           </td>
                         </tr>
@@ -1393,11 +1393,11 @@ const ProfitShareView: React.FC<ProfitShareViewProps> = ({
 
                     <div className="space-y-2">
                       <div className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
-                        Rincian Pembagian Bagi Hasil Per Investor (Proporsional Pro-Rata):
+                        Rincian Pembagian Bagi Hasil Per Investor
                       </div>
-                      <table className="w-full text-left border-collapse text-xs">
+                      <table className="w-full text-left border-collapse text-xs border-y border-slate-900">
                         <thead>
-                          <tr className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold uppercase tracking-wider border-y border-slate-300 dark:border-slate-700">
+                          <tr className="text-slate-950 dark:text-slate-100 font-bold uppercase tracking-wider border-b border-slate-900 dark:border-slate-200">
                             <th className="py-2.5 px-4">Nama Pemegang Modal Investor</th>
                             <th className="py-2.5 px-4 text-center">Porsi Modal (%)</th>
                             <th className="py-2.5 px-4 text-right">Nominal Hak Bagi Hasil (Rp)</th>
@@ -1408,7 +1408,7 @@ const ProfitShareView: React.FC<ProfitShareViewProps> = ({
                             <tr key={idx}>
                               <td className="py-2.5 px-4 font-semibold text-slate-900 dark:text-slate-100 font-sans">{inv.investorName}</td>
                               <td className="py-2.5 px-4 text-center font-bold">{inv.ownershipPercent}%</td>
-                              <td className="py-2.5 px-4 text-right font-bold text-amber-600 dark:text-amber-400">{formatCurrency(inv.payoutAmount)}</td>
+                              <td className="py-2.5 px-4 text-right font-bold text-slate-950 dark:text-slate-100">{formatCurrency(inv.payoutAmount)}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -1422,9 +1422,9 @@ const ProfitShareView: React.FC<ProfitShareViewProps> = ({
 
                   return (
                     <div className="space-y-4">
-                      <table className="w-full text-left border-collapse text-xs">
+                      <table className="w-full text-left border-collapse text-xs border-y border-slate-900">
                         <thead>
-                          <tr className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold uppercase tracking-wider border-y border-slate-300 dark:border-slate-700">
+                          <tr className="text-slate-950 dark:text-slate-100 font-bold uppercase tracking-wider border-b border-slate-900 dark:border-slate-200">
                             <th className="py-3 px-4">Keterangan Rincian bagi Hasil</th>
                             <th className="py-3 px-4 text-center">Proporsi Modal (%)</th>
                             <th className="py-3 px-4 text-right">Jumlah Hak Bagi Hasil (Rp)</th>
@@ -1445,12 +1445,12 @@ const ProfitShareView: React.FC<ProfitShareViewProps> = ({
                             <td className="py-3 px-4 text-center font-sans">{printSukukSettlement.settlement.appliedInvestorSharePercent}% Rate</td>
                             <td className="py-3 px-4 text-right font-bold text-slate-900 dark:text-slate-100">{formatCurrency(printSukukSettlement.settlement.totalInvestorPayout)}</td>
                           </tr>
-                          <tr className="bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 font-bold text-sm">
+                          <tr className="border-t border-slate-900 text-slate-950 dark:text-slate-100 font-bold text-sm">
                             <td className="py-4 px-4 font-sans uppercase">
                               Nett Bagi Hasil Hak {targetInv.investorName}
                             </td>
                             <td className="py-4 px-4 text-center font-sans">{targetInv.ownershipPercent}% Porsi</td>
-                            <td className="py-4 px-4 text-right text-amber-600 dark:text-amber-400 font-extrabold text-base">
+                            <td className="py-4 px-4 text-right font-extrabold text-base">
                               {formatCurrency(targetInv.payoutAmount)}
                             </td>
                           </tr>
@@ -1458,11 +1458,11 @@ const ProfitShareView: React.FC<ProfitShareViewProps> = ({
                       </table>
 
                       {projInv && (
-                        <div className="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl text-xs space-y-1">
-                          <div className="text-slate-400 font-semibold text-[10px] uppercase tracking-wider">REKAPITULASI DANA REKENING TUJUAN TRANSFER:</div>
+                        <div className="border-t border-slate-300 pt-3 text-xs space-y-1">
+                          <div className="text-slate-500 font-semibold text-[9px] uppercase tracking-widest">Rekening Tujuan Transfer</div>
                           <div className="font-bold text-slate-900 dark:text-slate-100">{targetInv.investorName}</div>
-                          <div className="font-mono text-slate-600 dark:text-slate-300">Transfer Bank: {projInv.bankName} • Account: {projInv.bankAccount}</div>
-                          <div className="font-mono text-emerald-600 dark:text-emerald-400 font-semibold">Status Pencairan: Lunas & Terverifikasi</div>
+                          <div className="font-mono text-slate-600 dark:text-slate-300">Transfer Bank: {projInv.bankName} | Account: {projInv.bankAccount}</div>
+                          <div className="font-mono text-slate-700 dark:text-slate-200 font-semibold">Status Pencairan: Lunas & Terverifikasi</div>
                         </div>
                       )}
                     </div>
@@ -1470,14 +1470,14 @@ const ProfitShareView: React.FC<ProfitShareViewProps> = ({
                 })()}
 
                 {/* CEO Signature Block Only */}
-                <div className="pt-10 flex justify-end text-center text-xs">
+                <div className="pt-10 flex justify-end text-center text-xs border-t border-slate-900">
                   <div className="w-64 space-y-1">
-                    <p className="text-slate-400 font-semibold uppercase tracking-wider text-[10px]">Penerbit & Pengelola Projek,</p>
-                    <p className="font-extrabold text-slate-900 dark:text-slate-100 uppercase tracking-wide">PT. NISKALA TECH ID</p>
+                    <p className="text-slate-500 font-semibold uppercase tracking-widest text-[9px]">Penerbit & Pengelola Projek,</p>
+                    <p className="font-bold text-slate-950 dark:text-slate-100 uppercase tracking-wide">PT. NISKALA TECH ID</p>
                     <div className="h-16 flex items-center justify-center">
                       {/* Clean Official Signature Space */}
                     </div>
-                    <p className="font-extrabold text-slate-900 dark:text-slate-100 underline text-sm font-sans">Faris Dwi Ramadhan</p>
+                    <p className="font-bold text-slate-950 dark:text-slate-100 border-t border-slate-800 pt-2 text-sm font-sans">Faris Dwi Ramadhan</p>
                     <p className="text-slate-500 font-semibold text-[11px]">Chief Executive Officer (CEO)</p>
                   </div>
                 </div>
